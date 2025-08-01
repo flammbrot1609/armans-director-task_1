@@ -12,6 +12,8 @@ A modern, responsive starter template with HTML, CSS, and JavaScript ready to go
 - 🎭 **Animations** - CSS animations and scroll-triggered effects
 - 🔔 **Notifications** - Built-in notification system
 
+**Hinweis:** Das Projekt enthält kein Backend mehr und läuft rein als statische HTML/CSS/JS-Seite.
+
 ## Project Structure
 
 ```

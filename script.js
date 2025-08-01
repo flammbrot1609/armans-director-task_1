@@ -1,13 +1,83 @@
 // DOM Content Loaded Event
 document.addEventListener('DOMContentLoaded', function() {
     console.log('HTML + JS + CSS Template loaded successfully!');
-    
     // Initialize all functionality
     initializeNavigation();
-    initializeHeroButton();
-    initializeContactForm();
     initializeScrollAnimations();
+
 });
+
+
+
+
+
+    const closeAuthModal = document.getElementById('closeAuthModal');
+    const authForm = document.getElementById('authForm');
+    const toggleAuthMode = document.getElementById('toggleAuthMode');
+    const authTitle = document.getElementById('authTitle');
+    let isLoginMode = true;
+
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+            firebase.auth().signOut();
+        });
+    }
+    if (closeAuthModal) {
+        closeAuthModal.addEventListener('click', closeModal);
+    }
+
+    if (loginBtn) {
+        loginBtn.addEventListener('click', openModal);
+    }
+    if (toggleAuthMode) {
+        toggleAuthMode.addEventListener('click', function() {
+            isLoginMode = !isLoginMode;
+            authTitle.textContent = isLoginMode ? 'Login' : 'Sign Up';
+            authForm.querySelector('button[type="submit"]').textContent = isLoginMode ? 'Login' : 'Sign Up';
+            toggleAuthMode.textContent = isLoginMode ? 'Create an account' : 'Already have an account? Login';
+        });
+    }
+    if (authForm) {
+        authForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            if (isLoginMode) {
+                firebase.auth().signInWithEmailAndPassword(email, password)
+                    .then(() => { closeModal(); })
+                    .catch(err => alert(err.message));
+            } else {
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                    .then(() => { closeModal(); })
+                    .catch(err => alert(err.message));
+            }
+        });
+    }
+    // Google Auth
+    const googleAuthBtn = document.getElementById('googleAuthBtn');
+    if (googleAuthBtn) {
+        googleAuthBtn.addEventListener('click', function() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .then(() => { closeModal(); })
+                .catch(err => alert(err.message));
+        });
+    }
+    // Show/hide login/logout buttons based on auth state
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'inline-block';
+        } else {
+            if (loginBtn) loginBtn.style.display = 'inline-block';
+            if (logoutBtn) logoutBtn.style.display = 'none';
+        }
+    });
+}
+
+
+
 
 // Navigation functionality
 function initializeNavigation() {
@@ -35,84 +105,7 @@ function initializeNavigation() {
     });
 }
 
-// Hero button functionality
-function initializeHeroButton() {
-    const ctaButton = document.getElementById('cta-button');
-    
-    if (ctaButton) {
-        ctaButton.addEventListener('click', function() {
-            // Add click animation
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 150);
-            
-            // Scroll to about section
-            const aboutSection = document.getElementById('about');
-            if (aboutSection) {
-                aboutSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-            
-            // Show welcome message
-            showNotification('Welcome! Scroll down to explore more.', 'success');
-        });
-    }
-}
 
-// Contact form functionality
-function initializeContactForm() {
-    const contactForm = document.getElementById('contact-form');
-    
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            const message = formData.get('message');
-            
-            // Basic validation
-            if (!name || !email || !message) {
-                showNotification('Please fill in all fields.', 'error');
-                return;
-            }
-            
-            if (!isValidEmail(email)) {
-                showNotification('Please enter a valid email address.', 'error');
-                return;
-            }
-            
-            // Simulate form submission
-            const submitButton = this.querySelector('button[type="submit"]');
-            const originalText = submitButton.textContent;
-            
-            submitButton.textContent = 'Sending...';
-            submitButton.disabled = true;
-            
-            setTimeout(() => {
-                // Reset form
-                this.reset();
-                submitButton.textContent = originalText;
-                submitButton.disabled = false;
-                
-                showNotification('Message sent successfully! (This is a demo)', 'success');
-            }, 2000);
-        });
-        
-        // Add real-time validation
-        const inputs = contactForm.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('blur', function() {
-                validateField(this);
-            });
-        });
-    }
-}
 
 // Field validation
 function validateField(field) {
@@ -261,22 +254,55 @@ const utils = {
         };
     },
     
-    // Get current scroll position
-    getScrollPosition: function() {
-        return window.pageYOffset || document.documentElement.scrollTop;
-    },
-    
-    // Check if element is in viewport
-    isInViewport: function(element) {
-        const rect = element.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
     }
 };
 
 // Export utils for global access (optional)
 window.templateUtils = utils;
+
+// Debug-Tool für DevTools: Button-Stack-Analyse
+window.debugButtonStack = function() {
+  const btn = document.getElementById('loginBtn');
+  const rect = btn.getBoundingClientRect();
+  const cx = Math.floor(rect.left + rect.width/2);
+  const cy = Math.floor(rect.top + rect.height/2);
+  const topEl = document.elementFromPoint(cx, cy);
+  console.log('Topmost element:', topEl);
+  const stack = document.elementsFromPoint(cx, cy).map(e => {
+    const cs = getComputedStyle(e);
+    return {
+      tag: e.tagName.toLowerCase(),
+      class: e.className,
+      id: e.id,
+      zIndex: cs.zIndex,
+      position: cs.position,
+      pointerEvents: cs.pointerEvents,
+      opacity: cs.opacity,
+    };
+  });
+  console.table(stack);
+  const chain = document.elementsFromPoint(cx, cy);
+  console.log('Pointer-events chain:', chain.map(e => [e.tagName, e.className, getComputedStyle(e).pointerEvents]));
+  function stackingContexts(node){
+    const out = [];
+    while (node && node !== document.documentElement) {
+      const cs = getComputedStyle(node);
+      const createsContext =
+        cs.position !== 'static' && cs.zIndex !== 'auto' ||
+        cs.transform !== 'none' ||
+        cs.filter !== 'none' ||
+        parseFloat(cs.opacity) < 1 ||
+        cs.mixBlendMode !== 'normal' ||
+        cs.perspective !== 'none' ||
+        cs.isolation === 'isolate' ||
+        cs.willChange && /transform|opacity|filter|perspective/.test(cs.willChange);
+      if (createsContext) {
+        out.push({node, class: node.className, z: cs.zIndex, pos: cs.position, transform: cs.transform, opacity: cs.opacity});
+      }
+      node = node.parentElement;
+    }
+    return out;
+  }
+  console.log('Stacking Contexts:', stackingContexts(topEl || btn));
+};
