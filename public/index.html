@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arman's Director Task</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .hero {
+            background: #000000;
+            padding: 64px 0 40px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="assets/logo.png">
+                
+            </div>
+
+        </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <h2>Moin und Willkommen! Lass einen Eintrag da!</h2>
+            
+        </section>
+        <div class="sections">
+            <div class="section-box" id="product-development">
+    <h3>Gästebuch</h3>
+    <p>Hinterlasse einen Gruß, ein Lob oder einfach ein paar nette Worte. Dein Eintrag bleibt für alle sichtbar und macht diese Seite ein Stück persönlicher!</p>
+    <form id="guestbook-form" autocomplete="off">
+      <div class="form-row">
+        <input type="text" id="name" name="name" placeholder="Dein Name" maxlength="32" required />
+      </div>
+      <div class="form-row">
+        <textarea id="message" name="message" rows="2" maxlength="280" placeholder="Dein Gästebucheintrag" required></textarea>
+      </div>
+      <button type="submit" class="guestbook-btn">Eintragen</button>
+    </form>
+    <ul id="comment-list"></ul>
+
+</div>
+
+        </div>
+    </main>
+    <script type="module" src="js/guestbook-firebase.js"></script>
+</body>
+
+    <footer>
+        <div class="container">
+        </div>
+    </footer>
+
+
+
+    <script src="script.js"></script>
+    <script src="guestbook-spa.js"></script>
+    <script type="module" src="js/guestbook-firebase.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "armans-director-task",
+  "version": "1.0.0",
+  "description": "Minimalistisches Gästebuch-Projekt für Firebase/Netlify Deployment.",
+  "main": "index.js",
+  "license": "MIT"
+}
+

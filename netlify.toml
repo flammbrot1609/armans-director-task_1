@@ -1,11 +1,11 @@
 [build]
-  publish = "."
+  publish = "public"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "18.16.0"
 
-[context.production.environment]
-  NODE_ENV = "production"
+[dev]
+  command = ""
 
 [[redirects]]
   from = "/api/*"

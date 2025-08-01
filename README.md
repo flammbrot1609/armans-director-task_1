@@ -1,76 +1,76 @@
-# HTML + JS + CSS Template
+# Arman's Gästebuch Website
 
-A modern, responsive starter template with HTML, CSS, and JavaScript ready to go!
+Eine moderne, minimalistische Gästebuch-Seite – inspiriert von thomann.io, mit Firebase-Backend, Neon-Farbschema und klarer Struktur.
 
 ## Features
 
-- **Modern Design** - Clean and contemporary styling
-- **Responsive Layout** - Works perfectly on all devices
-- **Interactive Elements** - Dynamic user interactions with JavaScript
-- **Smooth Scrolling** - Navigation with smooth scroll effects
-- **Contact Form** - Functional contact form with validation
-- **Animations** - CSS animations and scroll-triggered effects
-- **Notifications** - Built-in notification system
+- **Gästebuch:** Besucher können Einträge hinterlassen, die live angezeigt werden
+- **Firebase Firestore Backend:** Alle Einträge werden dauerhaft in Firestore gespeichert
+- **Neon Color Palette:** #000000 (schwarz), #FD01A6 (pink), #2BFD63 (giftgrün), #8E52F5 (lila)
+- **Minimalistisches Design:** Navigation ohne Logo/Links, Fokus auf Gästebuch
+- **Responsive:** Sieht auf Desktop und Mobile top aus
+- **Sichere Eingaben:** HTML-Escaping gegen XSS
 
-**Hinweis:** Das Projekt enthält kein Backend mehr und läuft rein als statische HTML/CSS/JS-Seite.
-
-## Project Structure
+## Projektstruktur
 
 ```
-html-js-css-template/
-├── index.html          # Main HTML file
-├── styles.css          # CSS styles and responsive design
-├── script.js           # JavaScript functionality
-└── README.md           # This file
+/public/
+  index.html               # Hauptseite
+  /css/
+    styles.css             # Hauptstyles
+    guestbook.css          # Zusatzstyles (optional)
+  /js/
+    guestbook-firebase.js  # Gästebuch + Firestore Integration
+    script.js              # (optional, weitere JS-Features)
+  /assets/
+    logo.png               # Logo (optional)
+README.md                  # Diese Datei
+netlify.toml               # Netlify Deployment Config
 ```
 
 ## Getting Started
 
-1. **Open the project**: Simply open `index.html` in your web browser
-2. **Start a local server** (recommended): 
+1. **Projekt klonen:**
    ```bash
-   # Using Python 3
+   git clone <repo-url>
+   cd <projektordner>
+   ```
+2. **Firebase einrichten:**
+   - Gehe zu https://console.firebase.google.com/
+   - Neues Projekt anlegen (z.B. "arman-s-director-task")
+   - Firestore aktivieren (Start in Test Mode)
+   - Collection `comments` anlegen (Felder: name, message, timestamp)
+   - Konfigurationsdaten in `/js/guestbook-firebase.js` eintragen (bereits erledigt)
+3. **Lokal testen:**
+   ```bash
    python3 -m http.server 8000
-   
-   # Using Node.js (if you have live-server installed)
+   # oder
    npx live-server
    ```
-3. **Start customizing**: Edit the HTML, CSS, and JavaScript files to build your project
+4. **Deployment:**
+   - Bereits für Netlify vorbereitet, einfach deployen
+   - Live unter: https://armans-director-task.windsurf.build
 
-## What's Included
+## Gästebuch Backend (Firebase)
+- **Speichert alle Einträge in Firestore**
+- Echtzeit-Updates durch onSnapshot
+- Felder: name (string), message (string), timestamp (timestamp)
 
-### HTML Structure
-- Semantic HTML5 elements
-- Navigation header with smooth scroll links
-- Hero section with call-to-action
-- Feature cards section
-- Contact form with validation
-- Footer
+## Farbschema
+- **Schwarz:** #000000
+- **Pink:** #FD01A6
+- **Giftgrün:** #2BFD63
+- **Lila:** #8E52F5
 
-### CSS Features
-- CSS Grid and Flexbox layouts
-- CSS animations and transitions
-- Responsive design with media queries
-- Modern color scheme and typography
-- Hover effects and interactive states
+## Hinweise
+- Keine Navigation/Logo gewünscht (kann bei Bedarf ergänzt werden)
+- Alle Gästebucheinträge sind öffentlich sichtbar
+- Bei Fragen zu Moderation, Export, oder weiteren Features → siehe `guestbook-firebase.js`
 
-### JavaScript Functionality
-- Smooth scrolling navigation
-- Form validation and submission handling
-- Notification system
-- Scroll-triggered animations
-- Utility functions for common tasks
+---
 
-## Customization
+**Viel Spaß mit deinem Gästebuch!**
 
-### Colors
-The main colors used in the template:
-- Primary: `#3498db` (blue)
-- Secondary: `#e74c3c` (red)
-- Dark: `#2c3e50`
-- Light: `#f8f9fa`
-
-### Fonts
 Currently using Arial font family. You can easily change this in the CSS:
 ```css
 body {
