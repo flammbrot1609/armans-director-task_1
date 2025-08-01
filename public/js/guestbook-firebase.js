@@ -49,4 +49,36 @@ form.addEventListener('submit', async function(e) {
         timestamp: serverTimestamp()
     });
     form.reset();
+    showToast('Danke für deinen Eintrag!');
+    setTimeout(() => {
+        const first = commentList.querySelector('.comment');
+        if(first) first.scrollIntoView({behavior: 'smooth', block: 'center'});
+    }, 300);
+});
+
+// Toast-Message
+function showToast(msg) {
+    const toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerText = msg;
+    toastContainer.appendChild(toast);
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+// Scroll-to-top Button
+const scrollBtn = document.getElementById('scrollToTopBtn');
+window.addEventListener('scroll', () => {
+    if(window.scrollY > 300) {
+        scrollBtn.style.display = 'block';
+    } else {
+        scrollBtn.style.display = 'none';
+    }
+});
+scrollBtn.addEventListener('click', () => {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    scrollBtn.blur();
 });

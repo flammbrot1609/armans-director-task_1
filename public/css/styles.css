@@ -1,12 +1,22 @@
 /* styles.css for thomann.io inspired redesign */
 
+html {
+    scroll-behavior: smooth;
+}
 body {
     margin: 0;
     font-family: 'Encode Sans Expanded', Arial, sans-serif;
     background: #000000;
     color: #fff;
     min-height: 100vh;
-} 
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+}
+
+:focus-visible {
+    outline: 2.5px solid #2BFD63;
+    outline-offset: 2px;
+}
+
 
 header {
     background: #000000;
@@ -73,13 +83,14 @@ nav {
 } 
 
 .hero h2 {
-    font-size: 2.6rem;
+    font-size: clamp(1.7rem, 6vw, 3.2rem);
     font-weight: 900;
     margin-bottom: 34px;
     letter-spacing: 0.01em;
     color: #fff;
     line-height: 1.18;
     text-shadow: 0 2px 8px #8E52F5;
+    word-break: break-word;
 } 
 
 .hero .cta {
@@ -112,34 +123,67 @@ nav {
     max-width: 1000px;
     margin: 48px auto 0 auto;
     padding-bottom: 48px;
-} 
+    width: 100%;
+}
+
+@media (max-width: 700px) {
+    .hero {
+        padding: 36px 0 22px 0;
+    }
+    .section-box {
+        min-width: 98vw;
+        max-width: 99vw;
+        padding: 16px 2vw 12px 2vw;
+    }
+    .guestbook-btn {
+        font-size: 1.09rem;
+        padding: 14px 0;
+    }
+    #comment-list .comment {
+        padding: 10px 8px 7px 8px;
+    }
+    .sections {
+        flex-direction: column;
+        gap: 1.2rem;
+        margin: 28px 0 0 0;
+        padding: 0 0 24px 0;
+    }
+}
+
 
 .section-box {
     background: #1a1a1a;
     border-radius: 16px;
     box-shadow: 0 2px 24px #8E52F5;
     flex: 1 1 320px;
-    min-width: 320px;
-    max-width: 420px;
-    padding: 32px 28px 28px 28px;
+    min-width: 260px;
+    max-width: 430px;
+    padding: clamp(18px, 5vw, 32px) clamp(12px, 4vw, 28px) clamp(14px, 3vw, 28px) clamp(12px, 4vw, 28px);
     text-align: left;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     border: 2px solid #FD01A6;
-} 
+    transition: box-shadow 0.22s, border 0.22s;
+}
+.section-box:focus-within, .section-box:hover {
+    box-shadow: 0 4px 32px #2BFD63;
+    border: 2.5px solid #2BFD63;
+}
+
 
 .section-box h3 {
-    font-size: 1.25rem;
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
     font-weight: 900;
     margin-bottom: 14px;
     color: #2BFD63;
     letter-spacing: 0.02em;
     text-align: center;
+    text-shadow: 0 1px 10px #2BFD6344;
 }
 
 .section-box p {
-    font-size: 1.05rem;
+    font-size: clamp(0.98rem, 2vw, 1.18rem);
     margin-bottom: 22px;
     color: #fff;
     font-weight: 500;
@@ -167,12 +211,15 @@ nav {
     margin: 18px 0 12px 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    width: 100%;
+    align-items: stretch;
 }
 .form-row {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    width: 100%;
 }
 .section-box input,
 .section-box textarea {
@@ -181,12 +228,14 @@ nav {
     border: 2px solid #8E52F5;
     border-radius: 7px;
     font-family: 'Encode Sans Expanded', Arial, sans-serif;
-    font-size: 1.09rem;
+    font-size: clamp(1rem, 2vw, 1.13rem);
     font-weight: 600;
-    padding: 10px 13px;
+    padding: 12px 13px;
     outline: none;
     box-shadow: 0 2px 8px #2BFD63;
     transition: border 0.2s, box-shadow 0.2s;
+    width: 100%;
+    resize: vertical;
 }
 .section-box input:focus,
 .section-box textarea:focus {
@@ -198,15 +247,21 @@ nav {
     color: #fff;
     border: none;
     border-radius: 7px;
-    padding: 12px 0;
-    font-size: 1.13rem;
+    padding: clamp(13px, 4vw, 18px) 0;
+    font-size: clamp(1.08rem, 2vw, 1.22rem);
     font-weight: 900;
     font-family: 'Encode Sans Expanded', Arial, sans-serif;
     letter-spacing: 0.02em;
     box-shadow: 0 2px 8px #FD01A6;
     margin-top: 8px;
     cursor: pointer;
-    transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+    transition: background 0.18s, box-shadow 0.18s, color 0.18s, transform 0.13s;
+    width: 100%;
+    touch-action: manipulation;
+}
+.guestbook-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 1px 4px #FD01A6;
 }
 .guestbook-btn:hover {
     background: linear-gradient(90deg, #8E52F5 0%, #FD01A6 100%);
@@ -225,6 +280,11 @@ nav {
     padding: 10px 16px 7px 16px;
     border-radius: 7px;
     box-shadow: 0 2px 8px #8E52F5;
+    animation: fadeInEntry 0.7s cubic-bezier(.77,.01,.27,1.01);
+}
+@keyframes fadeInEntry {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 #comment-list .comment-meta {
     font-size: 0.97rem;
@@ -238,6 +298,86 @@ nav {
     word-break: break-word;
 }
 
+
+#toast-container {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.toast {
+    background: linear-gradient(90deg, #2BFD63 0%, #8E52F5 100%);
+    color: #fff;
+    font-weight: 800;
+    padding: 16px 32px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 24px #FD01A6;
+    font-size: 1.08rem;
+    opacity: 0;
+    animation: fadeInToast 0.4s forwards, fadeOutToast 0.4s 2.6s forwards;
+    pointer-events: auto;
+}
+@keyframes fadeInToast {
+    from { opacity: 0; transform: translateY(-24px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes fadeOutToast {
+    to   { opacity: 0; transform: translateY(-24px) scale(0.95); }
+}
+
+#scrollToTopBtn {
+    position: fixed;
+    right: 22px;
+    bottom: 32px;
+    z-index: 1500;
+    background: linear-gradient(90deg, #8E52F5 0%, #FD01A6 100%);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 2rem;
+    font-weight: bold;
+    box-shadow: 0 2px 12px #FD01A6;
+    cursor: pointer;
+    opacity: 0.85;
+    display: none;
+    transition: opacity 0.18s, background 0.18s, box-shadow 0.18s, transform 0.13s;
+}
+#scrollToTopBtn:focus-visible {
+    outline: 2.5px solid #2BFD63;
+    outline-offset: 2px;
+}
+#scrollToTopBtn:hover {
+    opacity: 1;
+    background: linear-gradient(90deg, #FD01A6 0%, #8E52F5 100%);
+    box-shadow: 0 4px 20px #8E52F5;
+    transform: scale(1.09);
+}
+
+@media (max-width: 700px) {
+    #toast-container {
+        top: 10px;
+        padding: 0 2vw;
+    }
+    .toast {
+        font-size: 0.98rem;
+        padding: 10px 8vw;
+    }
+    #scrollToTopBtn {
+        width: 38px;
+        height: 38px;
+        font-size: 1.4rem;
+        right: 8px;
+        bottom: 14px;
+    }
+}
 
 footer {
     background: #000000;
