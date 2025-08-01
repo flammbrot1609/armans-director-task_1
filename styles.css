@@ -105,14 +105,14 @@ nav {
     padding: 80px 0;
 }
 
-/* CRUD Aufgabenliste */
-.todo-form {
+
+ {
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
     flex-wrap: wrap;
 }
-.todo-form input[type="text"] {
+ input[type="text"] {
     flex: 1 1 160px;
     padding: 12px 18px;
     border: 2px solid #FD01A6;
@@ -122,17 +122,17 @@ nav {
     background: #f9f8fd;
     transition: border 0.2s;
 }
-.todo-form input[type="text"]:focus {
+ input[type="text"]:focus {
     border: 2px solid #8E52F5;
     background: #fff;
 }
-.todo-list {
+ {
     list-style: none;
     padding: 0;
     margin: 0;
     max-width: 600px;
 }
-.todo-list li {
+ li {
     background: linear-gradient(90deg, #fff 60%, #FD01A6 100%);
     margin-bottom: 1rem;
     padding: 1.1rem 1.5rem;
@@ -144,26 +144,26 @@ nav {
     gap: 1rem;
     animation: fadeInUp 0.5s cubic-bezier(.39,.575,.56,1) both;
 }
-.todo-list .todo-content {
+ .todo-content {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
 }
-.todo-list .todo-title {
+  {
     font-weight: 600;
     color: #8E52F5;
     font-size: 1.1rem;
 }
-.todo-list .todo-text {
+  {
     color: #333;
     font-size: 0.98rem;
 }
-.todo-actions {
+ {
     display: flex;
     gap: 0.5rem;
 }
-.todo-actions button {
+ button {
     border: none;
     background: none;
     cursor: pointer;
@@ -173,16 +173,16 @@ nav {
     border-radius: 50%;
     padding: 6px;
 }
-.todo-actions button:hover {
+ button:hover {
     color: #8E52F5;
     background: #f9f8fd;
 }
 @media (max-width: 600px) {
-    .todo-form {
+     {
         flex-direction: column;
         gap: 0.7rem;
     }
-    .todo-list li {
+     li {
         padding: 0.9rem 1rem;
     }
 }

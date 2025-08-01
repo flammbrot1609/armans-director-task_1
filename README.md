@@ -4,13 +4,13 @@ A modern, responsive starter template with HTML, CSS, and JavaScript ready to go
 
 ## Features
 
-- 🎨 **Modern Design** - Clean and contemporary styling
-- 📱 **Responsive Layout** - Works perfectly on all devices
-- ⚡ **Interactive Elements** - Dynamic user interactions with JavaScript
-- 🎯 **Smooth Scrolling** - Navigation with smooth scroll effects
-- 📝 **Contact Form** - Functional contact form with validation
-- 🎭 **Animations** - CSS animations and scroll-triggered effects
-- 🔔 **Notifications** - Built-in notification system
+- **Modern Design** - Clean and contemporary styling
+- **Responsive Layout** - Works perfectly on all devices
+- **Interactive Elements** - Dynamic user interactions with JavaScript
+- **Smooth Scrolling** - Navigation with smooth scroll effects
+- **Contact Form** - Functional contact form with validation
+- **Animations** - CSS animations and scroll-triggered effects
+- **Notifications** - Built-in notification system
 
 **Hinweis:** Das Projekt enthält kein Backend mehr und läuft rein als statische HTML/CSS/JS-Seite.
 
