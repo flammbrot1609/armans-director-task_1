@@ -1,29 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>/* Prevent Light Flash */
+      try {
+        var t = localStorage.getItem('theme');
+        if (!t || t === 'dark') document.documentElement.classList.add('dark-mode');
+      } catch(e) { document.documentElement.classList.add('dark-mode'); }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arman's Director Task</title>
+    <meta name="description" content="Modernes Gästebuch – Lass einen Gruß, ein Lob oder nette Worte da!">
+    <meta property="og:title" content="Arman's Director Task Gästebuch">
+    <meta property="og:description" content="Modernes Gästebuch – Lass einen Gruß, ein Lob oder nette Worte da!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://arman-director-task.netlify.app/">
+    <meta property="og:image" content="https://arman-director-task.netlify.app/assets/logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Arman's Director Task Gästebuch">
+    <meta name="twitter:description" content="Modernes Gästebuch – Lass einen Gruß, ein Lob oder nette Worte da!">
+    <meta name="twitter:image" content="https://arman-director-task.netlify.app/assets/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
-    <style>
-        .hero {
-            background: #000000;
-            padding: 64px 0 40px 0;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
     <header>
         <nav>
             <div class="logo">
-                <img src="assets/logo.png">
-                
+                <!-- Logo entfernt -->
             </div>
+            <button id="theme-toggle" title="Dark/Light Mode" aria-label="Dark/Light Mode" style="font-size:1.7rem; background:none; border:none; cursor:pointer; margin-left:auto;">🌙</button>
+        </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <h2>Moin und Willkommen! Lass einen Eintrag da!</h2>
+        </section>
+        <div class="sections">
+            <div class="section-box" id="product-development">
+                <h3>Gästebuch</h3>
+                <p>Hinterlasse einen Gruß, ein Lob oder einfach ein paar nette Worte. Dein Eintrag bleibt für alle sichtbar und macht diese Seite ein Stück persönlicher!</p>
+                <form id="guestbook-form" autocomplete="off">
+                  <div class="form-row">
+                    <input type="text" id="name" name="name" placeholder="Dein Name" maxlength="32" required />
+                  </div>
+                  <div class="form-row">
+                    <textarea id="message" name="message" rows="2" maxlength="280" placeholder="Dein Gästebucheintrag" required></textarea>
+                  </div>
+                  <button type="submit" class="guestbook-btn">Eintragen</button>
+                </form>
+                <ul id="comment-list"></ul>
+            </div>
+        </div>
+    </main>
+    <div id="toast-container"></div>
+    <button id="scrollToTopBtn" title="Nach oben">⬆️</button>
+    <footer>
+        <div class="container">
+        </div>
+    </footer>
+    <script type="module" src="js/guestbook-firebase.js"></script>
+    <script src="js/theme-switcher.js"></script>
+</body>
+</html>
+<html lang="en">
+<head>
+    <script>/* Prevent Light Flash */
+      try {
+        var t = localStorage.getItem('theme');
+        if (!t || t === 'dark') document.documentElement.classList.add('dark-mode');
+      } catch(e) { document.documentElement.classList.add('dark-mode'); }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arman's Director Task</title>
+    <meta name="description" content="Modernes Gästebuch – Lass einen Gruß, ein Lob oder nette Worte da!">
+    <meta property="og:title" content="Arman's Director Task Gästebuch">
+    <meta property="og:description" content="Modernes Gästebuch – Lass einen Gruß, ein Lob oder nette Worte da!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://arman-director-task.netlify.app/">
+    <meta property="og:image" content="https://arman-director-task.netlify.app/assets/logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Arman's Director Task Gästebuch">
+    <meta name="twitter:description" content="Modernes Gästebuch – Lass einen Gruß, ein Lob oder nette Worte da!">
+    <meta name="twitter:image" content="https://arman-director-task.netlify.app/assets/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
 
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <!-- Logo entfernt -->
+            </div>
+            <button id="theme-toggle" title="Dark/Light Mode" aria-label="Dark/Light Mode" style="font-size:1.7rem; background:none; border:none; cursor:pointer; margin-left:auto;">🌙</button>
         </nav>
     </header>
     <main>
@@ -50,18 +125,13 @@
 
         </div>
     </main>
-    <script type="module" src="js/guestbook-firebase.js"></script>
-</body>
-
+    <div id="toast-container"></div>
+    <button id="scrollToTopBtn" title="Nach oben">⬆️</button>
     <footer>
         <div class="container">
         </div>
     </footer>
-
-
-
-    <script src="script.js"></script>
-    <script src="guestbook-spa.js"></script>
     <script type="module" src="js/guestbook-firebase.js"></script>
+    <script src="js/theme-switcher.js"></script>
 </body>
 </html>
