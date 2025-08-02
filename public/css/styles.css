@@ -1,4 +1,26 @@
-/* styles.css für Arman's Director Task – modernes Gästebuch */
+/* Spinner für Ladeindikator */
+.spinner {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border: 3px solid var(--color-accent);
+    border-top: 3px solid var(--color-accent2);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+#loading-indicator {
+    display: none;
+    text-align: center;
+    margin: 8px 0 8px 0;
+    font-size: 1rem;
+    color: var(--color-accent);
+}
+
 
 :root {
     --color-bg: #000000;
@@ -13,22 +35,6 @@
     --color-btn-hover-bg: linear-gradient(90deg, #8E52F5 0%, #FD01A6 100%);
     --color-btn-text: #fff;
     --color-footer-bg: #000000;
-    --color-footer-text: #8E52F5;
-}
-
-.dark-mode {
-    --color-bg: #fff;
-    --color-bg-alt: #f3f3f3;
-    --color-text: #181818;
-    --color-accent: #8E52F5;
-    --color-accent2: #FD01A6;
-    --color-success: #2BFD63;
-    --color-border: #8E52F5;
-    --color-comment-meta: #FD01A6;
-    --color-btn-bg: linear-gradient(90deg, #8E52F5 0%, #FD01A6 100%);
-    --color-btn-hover-bg: linear-gradient(90deg, #FD01A6 0%, #8E52F5 100%);
-    --color-btn-text: #181818;
-    --color-footer-bg: #fff;
     --color-footer-text: #8E52F5;
 }
 
@@ -54,7 +60,6 @@ body {
     outline-offset: 2px;
 }
 
-
 header {
     background: var(--color-bg);
     padding: 0;
@@ -62,21 +67,6 @@ header {
     top: 0;
     z-index: 100;
     border-bottom: 2px solid var(--color-border);
-    min-height: 0;
-    box-shadow: none;
-    transition: background 0.35s, color 0.35s;
-}
-nav {
-    min-height: 0;
-    padding: 0;
-    box-shadow: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.logo {
-    min-height: 0;
-    padding: 0;
 }
 
 nav {

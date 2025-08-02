@@ -1,12 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-    <script>/* Prevent Light Flash */
-      try {
-        var t = localStorage.getItem('theme');
-        if (!t || t === 'dark') document.documentElement.classList.add('dark-mode');
-      } catch(e) { document.documentElement.classList.add('dark-mode'); }
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arman's Director Task</title>
@@ -16,6 +10,8 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://arman-director-task.netlify.app/">
     <meta property="og:image" content="https://arman-director-task.netlify.app/assets/logo.png">
+    <meta property="og:locale" content="de_DE">
+    <meta name="theme-color" content="#000000">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Arman's Director Task Gästebuch">
     <meta name="twitter:description" content="Modernes Gästebuch – Lass einen Gruß, ein Lob oder nette Worte da!">
@@ -31,7 +27,43 @@
             <div class="logo">
                 <!-- Logo entfernt -->
             </div>
-            <button id="theme-toggle" title="Dark/Light Mode" aria-label="Dark/Light Mode" style="font-size:1.7rem; background:none; border:none; cursor:pointer; margin-left:auto;">🌙</button>
+        </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <h2>Moin und Willkommen! Lass einen Eintrag da!</h2>
+        </section>
+        <section class="sections">
+            <div class="section-box" id="product-development">
+                <h3>Gästebuch</h3>
+                <p>Host was uffm Herz? Schreib’s nei. Host nix? Dann hol dir’n Äppler und guck’s dir halt so an.</p>
+                <form id="guestbook-form" autocomplete="off">
+                  <div class="form-row">
+                    <input type="text" id="name" name="name" placeholder="Dein Name" maxlength="32" required tabindex="1" />
+                  </div>
+                  <div class="form-row">
+                    <textarea id="message" name="message" rows="2" maxlength="280" placeholder="Dein Gästebucheintrag" required tabindex="2"></textarea>
+                  </div>
+                  <button type="submit" class="guestbook-btn" aria-label="Eintrag absenden" tabindex="3">Eintragen</button>
+                </form>
+                <ul id="comment-list"></ul>
+            </div>
+        </section>
+    </main>
+    <div id="toast-container"></div>
+    <button id="scrollToTopBtn" title="Nach oben" aria-label="Nach oben scrollen" tabindex="4">⬆️</button>
+    <footer>
+        <div class="container"></div>
+    </footer>
+    <script type="module" src="js/guestbook-firebase.js"></script>
+</body>
+</html>
+    <header>
+        <nav>
+            <div class="logo">
+                <!-- Logo entfernt -->
+            </div>
+            
         </nav>
     </header>
     <main>
@@ -41,7 +73,7 @@
         <div class="sections">
             <div class="section-box" id="product-development">
                 <h3>Gästebuch</h3>
-                <p>Hinterlasse einen Gruß, ein Lob oder einfach ein paar nette Worte. Dein Eintrag bleibt für alle sichtbar und macht diese Seite ein Stück persönlicher!</p>
+                <p>Host was uffm Herz? Schreib’s nei. Host nix? Dann hol dir’n Äppler und guck’s dir halt so an.</p>
                 <form id="guestbook-form" autocomplete="off">
                   <div class="form-row">
                     <input type="text" id="name" name="name" placeholder="Dein Name" maxlength="32" required />
@@ -62,17 +94,12 @@
         </div>
     </footer>
     <script type="module" src="js/guestbook-firebase.js"></script>
-    <script src="js/theme-switcher.js"></script>
+
 </body>
 </html>
 <html lang="en">
 <head>
-    <script>/* Prevent Light Flash */
-      try {
-        var t = localStorage.getItem('theme');
-        if (!t || t === 'dark') document.documentElement.classList.add('dark-mode');
-      } catch(e) { document.documentElement.classList.add('dark-mode'); }
-    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arman's Director Task</title>
@@ -98,7 +125,7 @@
             <div class="logo">
                 <!-- Logo entfernt -->
             </div>
-            <button id="theme-toggle" title="Dark/Light Mode" aria-label="Dark/Light Mode" style="font-size:1.7rem; background:none; border:none; cursor:pointer; margin-left:auto;">🌙</button>
+            
         </nav>
     </header>
     <main>
@@ -109,7 +136,7 @@
         <div class="sections">
             <div class="section-box" id="product-development">
     <h3>Gästebuch</h3>
-    <p>Hinterlasse einen Gruß, ein Lob oder einfach ein paar nette Worte. Dein Eintrag bleibt für alle sichtbar und macht diese Seite ein Stück persönlicher!</p>
+    <p>Host was uffm Herz? Schreib’s nei. Host nix? Dann hol dir’n Äppler und guck’s dir halt so an.</p>
     <form id="guestbook-form" autocomplete="off">
       <div class="form-row">
         <input type="text" id="name" name="name" placeholder="Dein Name" maxlength="32" required />
@@ -132,6 +159,6 @@
         </div>
     </footer>
     <script type="module" src="js/guestbook-firebase.js"></script>
-    <script src="js/theme-switcher.js"></script>
+
 </body>
 </html>
