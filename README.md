@@ -1,4 +1,4 @@
-# Arman's Gästebuch Website
+# Arman's Gästebuch Website (Director's Retro Task)
 
 Eine moderne, minimalistische Gästebuch-Seite – inspiriert von thomann.io, mit Firebase-Backend, Neon-Farbschema und klarer Struktur.
 
