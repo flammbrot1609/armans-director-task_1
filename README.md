@@ -1,6 +1,9 @@
-# Arman's Gästebuch Website (Director's Retro Task)
+# Arman's Gästebuch Website
 
 Eine moderne, minimalistische Gästebuch-Seite – inspiriert von thomann.io, mit Firebase-Backend, Neon-Farbschema und klarer Struktur.
+
+**Live:** [https://arman-director-task.netlify.app](https://arman-director-task.netlify.app)
+**GitHub:** [https://github.com/flammbrot1609/armans-director-task_1](https://github.com/flammbrot1609/armans-director-task_1)
 
 ## Features
 
@@ -10,6 +13,7 @@ Eine moderne, minimalistische Gästebuch-Seite – inspiriert von thomann.io, mi
 - **Minimalistisches Design:** Navigation ohne Logo/Links, Fokus auf Gästebuch
 - **Responsive:** Sieht auf Desktop und Mobile top aus
 - **Sichere Eingaben:** HTML-Escaping gegen XSS
+- **Netlify Deployment**: Einfaches Hosting & Continuous Deployment
 
 ## Projektstruktur
 
@@ -18,10 +22,9 @@ Eine moderne, minimalistische Gästebuch-Seite – inspiriert von thomann.io, mi
   index.html               # Hauptseite
   /css/
     styles.css             # Hauptstyles
-    guestbook.css          # Zusatzstyles (optional)
   /js/
     guestbook-firebase.js  # Gästebuch + Firestore Integration
-    script.js              # (optional, weitere JS-Features)
+    theme-switcher.js      # Dark/Light-Mode
   /assets/
     logo.png               # Logo (optional)
 README.md                  # Diese Datei
@@ -32,12 +35,34 @@ netlify.toml               # Netlify Deployment Config
 
 1. **Projekt klonen:**
    ```bash
-   git clone <repo-url>
-   cd <projektordner>
+   git clone https://github.com/flammbrot1609/armans-director-task_1.git
+   cd armans-director-task_1
    ```
 2. **Firebase einrichten:**
    - Gehe zu https://console.firebase.google.com/
    - Neues Projekt anlegen (z.B. "arman-s-director-task")
+   - Firestore aktivieren
+   - Die Konfiguration findest du in `/public/js/guestbook-firebase.js`
+   - Erstelle eine Collection `comments` mit Feldern: `name`, `message`, `timestamp`
+
+3. **Deployment (Netlify):**
+   - Das Projekt ist bereits mit Netlify verbunden
+   - Für eigene Deployments: `netlify deploy --prod`
+
+## Firestore Hinweise
+- Kommentare werden in der Collection `comments` gespeichert
+- Prüfe Firestore-Regeln, falls keine Kommentare angezeigt werden
+- Kommentare bleiben erhalten, solange die Datenbank nicht manuell geleert wird
+
+## Troubleshooting
+- **Kommentare fehlen:** Prüfe Firestore-Konfiguration und Collection-Namen
+- **Deployment-Fehler:** Stelle sicher, dass Netlify CLI installiert und das Projekt verlinkt ist
+- **Fragen?** Issues im [GitHub Repo](https://github.com/flammbrot1609/armans-director-task_1/issues) eröffnen
+
+---
+
+© Arman Savuk, 2025
+
    - Firestore aktivieren (Start in Test Mode)
    - Collection `comments` anlegen (Felder: name, message, timestamp)
    - Konfigurationsdaten in `/js/guestbook-firebase.js` eintragen (bereits erledigt)
