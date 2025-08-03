@@ -8,6 +8,10 @@ import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSn
  * Initialisiert das Gästebuch nach DOM-Load
  */
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Utility: Logging ---
+    function logError(context, err) {
+        console.error(`[Gästebuch][${context}]`, err);
+    }
     // --- Firebase Konfiguration ---
     const firebaseConfig = {
         apiKey: "AIzaSyCF4gZ0ipzgg-GiUQXLc7lwpVzsStJbID4",
@@ -25,12 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('guestbook-form');
     const commentList = document.getElementById('comment-list');
     const submitBtn = form?.querySelector('.guestbook-btn');
+    // ARIA für Barrierefreiheit
+    if (form) form.setAttribute('aria-label', 'Gästebuch-Formular');
+    if (commentList) commentList.setAttribute('aria-live', 'polite');
 
     // Ladeindikator einfügen
     let loadingIndicator = document.createElement('div');
     loadingIndicator.id = 'loading-indicator';
-    loadingIndicator.innerHTML = '<span class="spinner"></span> <span class="loading-text">Wird gespeichert...</span>';
+    loadingIndicator.setAttribute('aria-live', 'assertive');
+    loadingIndicator.innerHTML = '<span class="spinner"></span> <span class="loading-text">Lade...</span>';
     form?.parentNode?.insertBefore(loadingIndicator, form.nextSibling);
+    loadingIndicator.style.display = 'none';
 
     /**
      * Wandelt potentiell unsicheren Text in HTML-sichere Zeichen um
@@ -45,18 +54,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Kommentare laden und live updaten ---
     const q = query(collection(db, "comments"), orderBy("timestamp", "desc"));
+    loadingIndicator.style.display = 'block';
     onSnapshot(q, (snapshot) => {
         if (!commentList) return;
         commentList.innerHTML = '';
+        if (snapshot.empty) {
+            commentList.innerHTML = '<li class="comment comment-empty">Noch keine Einträge vorhanden.</li>';
+        }
         snapshot.forEach(docSnap => {
             const comment = docSnap.data();
             const li = document.createElement('li');
             li.className = 'comment';
-            // Inline-Styles entfernt, stattdessen CSS-Klassen nutzen
             li.innerHTML = `
                 <div class="comment-header">
                     <div class="comment-meta">${escapeHTML(comment.name)} | ${comment.timestamp?.toDate().toLocaleString() || ''}</div>
-                    <button class="delete-btn" title="Eintrag löschen">🗑️</button>
+                    <button class="delete-btn" title="Eintrag löschen" aria-label="Eintrag löschen">🗑️</button>
                 </div>
                 <div class="comment-message">${escapeHTML(comment.message)}</div>
             `;
@@ -68,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         await deleteDoc(doc(db, "comments", docSnap.id));
                         showToast('Eintrag gelöscht!');
                     } catch (e) {
+                        logError('Löschen', e);
                         showToast('Fehler beim Löschen!');
                     } finally {
                         loadingIndicator.style.display = 'none';
@@ -76,6 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             commentList.appendChild(li);
         });
+        loadingIndicator.style.display = 'none';
+    }, err => {
+        logError('Snapshot', err);
+        showToast('Fehler beim Laden der Kommentare!');
+        loadingIndicator.style.display = 'none';
     });
 
     // --- Formular-Submit: Kommentar speichern ---
@@ -85,13 +103,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const messageInput = document.getElementById('message');
         const name = nameInput?.value.trim();
         const message = messageInput?.value.trim();
-        if (!name || !message) return;
+        // Input-Validierung
+        if (!name || !message) {
+            showToast('Bitte Name und Nachricht ausfüllen!');
+            return;
+        }
+        if (name.length > 32 || message.length > 500) {
+            showToast('Name oder Nachricht zu lang!');
+            return;
+        }
         loadingIndicator.style.display = 'block';
         submitBtn.disabled = true;
         try {
             await addDoc(collection(db, "comments"), {
-                name,
-                message,
+                name: escapeHTML(name),
+                message: escapeHTML(message),
                 timestamp: serverTimestamp()
             });
             form.reset();
@@ -102,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 300);
             nameInput?.focus();
         } catch (err) {
+            logError('Speichern', err);
             showToast('Fehler beim Speichern! Prüfe deine Internetverbindung.');
         } finally {
             loadingIndicator.style.display = 'none';
