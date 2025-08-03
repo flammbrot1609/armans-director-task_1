@@ -92,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingIndicator.style.display = 'none';
     }, err => {
         logError('Snapshot', err);
-        showToast('Fehler beim Laden der Kommentare!');
         loadingIndicator.style.display = 'none';
     });
 
