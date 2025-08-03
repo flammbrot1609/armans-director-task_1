@@ -1,3 +1,10 @@
+/*
+==================================================
+  Stylesheet für Arman's Gästebuch
+  - Strukturierte, kommentierte und aufgeräumte Version
+==================================================
+*/
+
 /* Spinner für Ladeindikator */
 .spinner {
     display: inline-block;
@@ -20,7 +27,6 @@
     font-size: 1rem;
     color: var(--color-accent);
 }
-
 
 :root {
     --color-bg: #000000;
