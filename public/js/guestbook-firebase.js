@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'auth/popup-closed-by-user': 'Popup geschlossen. Bitte erneut versuchen.',
             'auth/cancelled-popup-request': 'Popup abgebrochen. Bitte erneut versuchen.'
         };
-        const msg = map[code] || 'Anmeldung fehlgeschlagen.';
+        const msg = (map[code] || 'Anmeldung fehlgeschlagen.') + ` (${code})`;
         showToast(msg, 'error');
         logError('Auth', e);
     }
