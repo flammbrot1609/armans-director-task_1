@@ -74,7 +74,7 @@ netlify.toml               # Netlify Deployment Config
    ```
 4. **Deployment:**
    - Bereits für Netlify vorbereitet, einfach deployen
-   - Live unter: https://armans-director-task.windsurf.build
+   - Live unter: https://arman-director-task.netlify.app
 
 ## Gästebuch Backend (Firebase)
 - **Speichert alle Einträge in Firestore**

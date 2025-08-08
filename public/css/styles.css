@@ -16,6 +16,101 @@
     animation: spin 0.7s linear infinite;
     vertical-align: middle;
 }
+
+/* ------------------------------
+   Accessibility utilities
+------------------------------- */
+.sr-only {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0);
+    white-space: nowrap; border: 0;
+}
+
+/* ------------------------------
+   Field hints, counters, errors
+------------------------------- */
+.field-hint {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+.char-counter {
+    font-size: 0.9rem;
+    color: var(--color-comment-meta);
+}
+.error-text {
+    font-size: 0.9rem;
+    color: #FD014E;
+    font-weight: 700;
+    margin-left: auto;
+}
+.section-box input[aria-invalid="true"],
+.section-box textarea[aria-invalid="true"] {
+    border-color: #FD014E;
+    box-shadow: 0 0 0 2px rgba(253,1,78,0.4);
+}
+
+/* ------------------------------
+   Button loading state
+------------------------------- */
+.guestbook-btn.is-loading {
+    position: relative;
+    pointer-events: none;
+}
+.guestbook-btn.is-loading::after {
+    content: "";
+    position: absolute;
+    right: 16px;
+    top: 50%; transform: translateY(-50%);
+    width: 18px; height: 18px;
+    border: 2px solid #fff;
+    border-top-color: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+/* ------------------------------
+   Toast variants
+------------------------------- */
+.toast.success {
+    background: linear-gradient(90deg, #1c9c46 0%, #2BFD63 100%);
+}
+.toast.error {
+    background: linear-gradient(90deg, #FD014E 0%, #FD01A6 100%);
+}
+
+/* ------------------------------
+   Skeleton loader for comments
+------------------------------- */
+.comment-skeleton {
+    background: #1a1a1a;
+    border-left: 4px solid transparent;
+    margin-bottom: 18px;
+    padding: 10px 16px 7px 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px #111, 0 0 0 1.5px #222;
+    position: relative;
+    overflow: hidden;
+}
+.skeleton-line {
+    height: 14px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.14) 37%, rgba(255,255,255,0.06) 63%);
+    background-size: 400% 100%;
+    border-radius: 6px;
+    animation: shimmer 1.2s ease-in-out infinite;
+}
+.skeleton-line + .skeleton-line { margin-top: 10px; }
+.skeleton-small { width: 40%; }
+.skeleton-medium { width: 70%; }
+.skeleton-large { width: 90%; height: 18px; }
+@keyframes shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: 0 0; }
+}
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -580,5 +675,55 @@ footer {
     font-size: 0.98rem;
     border-top: 2px solid var(--color-border);
     transition: background 0.35s, color 0.35s;
+}
+
+/* ------------------------------
+   Theme Toggle Button Styles
+------------------------------- */
+#theme-toggle {
+    background: var(--color-btn-bg);
+    color: var(--color-btn-text);
+    border: none;
+    border-radius: 8px;
+    width: 42px;
+    height: 42px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px var(--color-accent2);
+    transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
+}
+#theme-toggle:hover {
+    background: var(--color-btn-hover-bg);
+    box-shadow: 0 4px 16px var(--color-accent);
+}
+#theme-toggle:active {
+    transform: scale(0.96);
+}
+#theme-toggle:focus-visible {
+    outline: 2.5px solid #2BFD63;
+    outline-offset: 2px;
+}
+
+/* ------------------------------
+   Light Theme (default when no .dark-theme on body)
+------------------------------- */
+body:not(.dark-theme) {
+    --color-bg: #ffffff;
+    --color-bg-alt: #f7f7f8;
+    --color-text: #111111;
+    --color-accent: #8E52F5;
+    --color-accent2: #FD01A6;
+    --color-success: #1c9c46;
+    --color-border: #8E52F5;
+    --color-comment-meta: #5a47a8;
+    --color-btn-bg: linear-gradient(90deg, #8E52F5 0%, #FD01A6 100%);
+    --color-btn-hover-bg: linear-gradient(90deg, #FD01A6 0%, #8E52F5 100%);
+    --color-btn-text: #ffffff;
+    --color-footer-bg: #f2f2f4;
+    --color-footer-text: #8E52F5;
 }
 

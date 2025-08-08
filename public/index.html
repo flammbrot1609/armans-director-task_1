@@ -20,20 +20,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 </head>
-<body>
+<body class="dark-theme">
     <!-- Hauptnavigation und Logo -->
     <header>
         <nav>
             <div class="logo">
                 <!-- Logo entfernt -->
             </div>
+            <button id="theme-toggle" aria-label="Theme umschalten" title="Theme umschalten">🌓</button>
         </nav>
     </header>
     <!-- Hauptinhalt -->
     <main>
         <section class="hero">
-            <h2>Moin und Willkommen! Lass einen Eintrag da!</h2>
+            <h1>Moin und Willkommen! Lass einen Eintrag da!</h1>
         </section>
         <section class="sections">
             <div class="section-box" id="product-development">
@@ -41,10 +43,20 @@
                 <p>Host was uffm Herz? Schreib’s nei. Host nix? Dann hol dir’n Äppler und guck’s dir halt so an.</p>
                 <form id="guestbook-form" autocomplete="off">
                     <div class="form-row">
-                        <input type="text" id="name" name="name" placeholder="Dein Name" maxlength="32" required tabindex="1" />
+                        <label class="sr-only" for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Dein Name" maxlength="32" required tabindex="1" aria-describedby="name-counter name-error" />
+                        <div class="field-hint">
+                            <span id="name-counter" class="char-counter">0/32</span>
+                            <span id="name-error" class="error-text" aria-live="polite"></span>
+                        </div>
                     </div>
                     <div class="form-row">
-                        <textarea id="message" name="message" rows="2" maxlength="280" placeholder="Dein Gästebucheintrag" required tabindex="2"></textarea>
+                        <label class="sr-only" for="message">Nachricht</label>
+                        <textarea id="message" name="message" rows="3" maxlength="280" placeholder="Dein Gästebucheintrag" required tabindex="2" aria-describedby="message-counter message-error"></textarea>
+                        <div class="field-hint">
+                            <span id="message-counter" class="char-counter">0/280</span>
+                            <span id="message-error" class="error-text" aria-live="polite"></span>
+                        </div>
                     </div>
                     <button type="submit" class="guestbook-btn" aria-label="Eintrag absenden" tabindex="3">Eintragen</button>
                 </form>
@@ -60,12 +72,7 @@
         <div class="container"></div>
     </footer>
     <!-- Haupt-JS -->
+    <script src="js/theme-switcher.js" defer></script>
     <script type="module" src="js/guestbook-firebase.js"></script>
-</body>
-</html>
-        </div>
-    </footer>
-    <script type="module" src="js/guestbook-firebase.js"></script>
-
 </body>
 </html>
