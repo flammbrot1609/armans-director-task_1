@@ -441,8 +441,15 @@ document.addEventListener('DOMContentLoaded', () => {
     privacyDetails?.addEventListener('click', (e) => { e.preventDefault(); openPrivacyModal(); });
     privacyClose?.addEventListener('click', () => acceptPrivacy());
     privacyAccept?.addEventListener('click', () => acceptPrivacy());
-    // Ein Klick irgendwo im Modal gilt als Zustimmung und schließt es
-    privacyModal?.addEventListener('click', () => { acceptPrivacy(); });
+    // Klicks innerhalb des Dialogs akzeptieren, Klicks auf den Overlay-Bereich nur schließen
+    privacyModal?.addEventListener('click', (e) => {
+        const dialog = privacyModal.querySelector('.privacy-modal__dialog');
+        if (dialog && dialog.contains(e.target)) {
+            acceptPrivacy();
+        } else {
+            closePrivacyModal();
+        }
+    });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !privacyModal?.hidden) closePrivacyModal(); });
     showPrivacyBannerIfNeeded();
 
