@@ -17,6 +17,9 @@
     vertical-align: middle;
 }
 
+/* Ensure elements with the [hidden] attribute are not displayed */
+[hidden] { display: none !important; }
+
 /* ------------------------------
    Accessibility utilities
 ------------------------------- */

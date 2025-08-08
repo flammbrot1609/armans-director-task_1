@@ -414,6 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'hidden';
         const focusEl = privacyModal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
         if (focusEl) focusEl.focus();
+        console.log('[privacy] modal opened');
     }
     function closePrivacyModal() {
         if (!privacyModal) return;
@@ -431,24 +432,35 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (authBtn && !authBtn.hidden) {
             authBtn.focus();
         }
+        console.log('[privacy] modal closed (accepted:', privacyAccepted, ')');
     }
     function acceptPrivacy() {
-        try { localStorage.setItem('privacyAccepted', 'true'); } catch (_) {}
+        console.log('[privacy] accept triggered');
+        try { localStorage.setItem('privacyAccepted', 'true'); } catch (e) { console.warn('[privacy] localStorage failed', e); }
         privacyAccepted = true;
         if (privacyBanner) privacyBanner.hidden = true;
         closePrivacyModal();
     }
     privacyDetails?.addEventListener('click', (e) => { e.preventDefault(); openPrivacyModal(); });
-    privacyClose?.addEventListener('click', () => acceptPrivacy());
-    privacyAccept?.addEventListener('click', () => acceptPrivacy());
+    privacyClose?.addEventListener('click', () => { console.log('[privacy] close button click'); acceptPrivacy(); });
+    privacyAccept?.addEventListener('click', () => { console.log('[privacy] banner OK click'); acceptPrivacy(); });
     // Klicks innerhalb des Dialogs akzeptieren, Klicks auf den Overlay-Bereich nur schließen
     privacyModal?.addEventListener('click', (e) => {
         const dialog = privacyModal.querySelector('.privacy-modal__dialog');
-        if (dialog && dialog.contains(e.target)) {
+        const inside = !!(dialog && dialog.contains(e.target));
+        console.log('[privacy] modal click', { inside, target: (e.target && e.target.className) || e.target?.tagName });
+        if (inside) {
             acceptPrivacy();
         } else {
             closePrivacyModal();
         }
+    });
+    // Sicherheitsnetz: direkter Listener auf den Dialog akzeptiert auch immer
+    const _privacyDialog = privacyModal?.querySelector('.privacy-modal__dialog');
+    _privacyDialog?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        console.log('[privacy] dialog click fallback');
+        acceptPrivacy();
     });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !privacyModal?.hidden) closePrivacyModal(); });
     showPrivacyBannerIfNeeded();
