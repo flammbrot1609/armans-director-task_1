@@ -441,7 +441,8 @@ document.addEventListener('DOMContentLoaded', () => {
     privacyDetails?.addEventListener('click', (e) => { e.preventDefault(); openPrivacyModal(); });
     privacyClose?.addEventListener('click', () => acceptPrivacy());
     privacyAccept?.addEventListener('click', () => acceptPrivacy());
-    privacyModal?.addEventListener('click', (e) => { if (e.target === privacyModal) closePrivacyModal(); });
+    // Ein Klick irgendwo im Modal gilt als Zustimmung und schließt es
+    privacyModal?.addEventListener('click', () => { acceptPrivacy(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !privacyModal?.hidden) closePrivacyModal(); });
     showPrivacyBannerIfNeeded();
 
