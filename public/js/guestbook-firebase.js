@@ -77,6 +77,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInfo = document.getElementById('user-info');
     const authMessage = document.getElementById('auth-message');
     const signInInline = document.getElementById('sign-in-inline');
+    // User Menu DOM
+    const userMenu = document.getElementById('user-menu');
+    const userMenuToggle = document.getElementById('user-menu-toggle');
+    const userLabel = document.getElementById('user-label');
+    const menuList = document.getElementById('user-menu-list');
+    const menuSignout = document.getElementById('menu-signout');
+    const menuUserName = document.getElementById('menu-user-name');
+    const menuUserEmail = document.getElementById('menu-user-email');
+    // Privacy DOM
+    const privacyBanner = document.getElementById('privacy-banner');
+    const privacyDetails = document.getElementById('privacy-details');
+    const privacyAccept = document.getElementById('privacy-accept');
+    const privacyModal = document.getElementById('privacy-modal');
+    const privacyClose = document.getElementById('privacy-close');
     // ARIA für Barrierefreiheit
     if (form) form.setAttribute('aria-label', 'Gästebuch-Formular');
     if (commentList) commentList.setAttribute('aria-live', 'polite');
@@ -103,15 +117,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateAuthUI(user) {
         const isLoggedIn = !!user;
-        if (userInfo) userInfo.textContent = isLoggedIn ? (user.displayName || user.email || 'Angemeldet') : '';
+        const display = isLoggedIn ? (user.displayName || user.email || 'Angemeldet') : '';
+        if (userInfo) userInfo.textContent = display;
         if (authBtn) {
+            // Bei Login zeigen wir das User-Menü; der Anmeldebutton wird versteckt
             authBtn.textContent = isLoggedIn ? 'Abmelden' : 'Anmelden';
             authBtn.setAttribute('aria-label', isLoggedIn ? 'Abmelden' : 'Anmelden');
             authBtn.title = isLoggedIn ? 'Abmelden' : 'Anmelden';
+            authBtn.hidden = !!isLoggedIn;
         }
+        if (userMenu) userMenu.hidden = !isLoggedIn;
+        if (userLabel) userLabel.textContent = display || 'User';
+        if (menuUserName) menuUserName.textContent = user?.displayName || '–';
+        if (menuUserEmail) menuUserEmail.textContent = user?.email || '';
         if (authMessage) authMessage.hidden = isLoggedIn; // Hinweis nur anzeigen, wenn ausgeloggt
         if (signInInline) signInInline.hidden = isLoggedIn;
         setFormEnabled(isLoggedIn);
+
+        // Name-Feld vorbelegen, wenn leer oder zuvor auto-gefüllt
+        if (isLoggedIn && user?.displayName && nameInput) {
+            const wasAutofilled = nameInput.dataset.autofilled === 'true';
+            if (!nameInput.value || wasAutofilled) {
+                nameInput.value = user.displayName;
+                nameInput.dataset.autofilled = 'true';
+                setCounter(nameCounter, (nameInput.value || '').length, NAME_MAX);
+                clearFieldError(nameInput, nameErrorEl);
+            }
+        }
     }
 
     function setCounter(el, current, max) {
@@ -268,6 +300,8 @@ document.addEventListener('DOMContentLoaded', () => {
     nameInput?.addEventListener('input', () => {
         setCounter(nameCounter, (nameInput.value || '').length, NAME_MAX);
         if (nameInput.hasAttribute('aria-invalid')) validateName();
+        // Nutzer hat den Namen aktiv bearbeitet, künftig nicht auto-überschreiben
+        if (nameInput.dataset) nameInput.dataset.autofilled = 'false';
     });
     messageInput?.addEventListener('input', () => {
         setCounter(messageCounter, (messageInput.value || '').length, MSG_MAX);
@@ -315,6 +349,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Startzustand: bis Auth geklärt ist, deaktiviert
     setFormEnabled(false);
+
+    // --- User Menu Interaktionen ---
+    function closeUserMenu() {
+        if (!menuList || !userMenuToggle) return;
+        menuList.classList.remove('open');
+        userMenuToggle.setAttribute('aria-expanded', 'false');
+        menuList.hidden = true;
+    }
+    function openUserMenu() {
+        if (!menuList || !userMenuToggle) return;
+        menuList.hidden = false;
+        // kleine Verzögerung, um CSS-Animationen zu erlauben
+        requestAnimationFrame(() => menuList.classList.add('open'));
+        userMenuToggle.setAttribute('aria-expanded', 'true');
+    }
+    userMenuToggle?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = menuList && menuList.classList.contains('open');
+        if (isOpen) closeUserMenu(); else openUserMenu();
+    });
+    document.addEventListener('click', (e) => {
+        if (!menuList || !userMenu) return;
+        if (!userMenu.contains(e.target)) closeUserMenu();
+    }, { capture: true });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeUserMenu();
+    });
+    menuSignout?.addEventListener('click', async () => {
+        try {
+            await signOut(auth);
+            showToast('Abgemeldet.', 'success');
+            closeUserMenu();
+        } catch (e) { showAuthError(e); }
+    });
+
+    // --- Datenschutz: Banner & Modal ---
+    function showPrivacyBannerIfNeeded() {
+        try {
+            const accepted = localStorage.getItem('privacyAccepted');
+            if (!accepted && privacyBanner) privacyBanner.hidden = false;
+        } catch (_) {}
+    }
+    function openPrivacyModal() {
+        if (!privacyModal) return;
+        privacyModal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        const focusEl = privacyModal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (focusEl) focusEl.focus();
+    }
+    function closePrivacyModal() {
+        if (!privacyModal) return;
+        privacyModal.hidden = true;
+        document.body.style.overflow = '';
+        privacyDetails?.focus();
+    }
+    privacyDetails?.addEventListener('click', (e) => { e.preventDefault(); openPrivacyModal(); });
+    privacyClose?.addEventListener('click', () => closePrivacyModal());
+    privacyAccept?.addEventListener('click', () => {
+        try { localStorage.setItem('privacyAccepted', 'true'); } catch (_) {}
+        if (privacyBanner) privacyBanner.hidden = true;
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !privacyModal?.hidden) closePrivacyModal(); });
+    showPrivacyBannerIfNeeded();
 
     // --- Scroll-to-top Button ---
     const scrollBtn = document.getElementById('scrollToTopBtn');

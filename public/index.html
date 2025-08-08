@@ -32,6 +32,20 @@
             <div class="nav-actions">
                 <span id="user-info" class="user-info" aria-live="polite"></span>
                 <button id="auth-btn" class="auth-btn" aria-label="Anmelden" title="Anmelden">Anmelden</button>
+                <div id="user-menu" class="user-menu" hidden>
+                    <button id="user-menu-toggle" class="user-chip" aria-haspopup="menu" aria-expanded="false" aria-controls="user-menu-list">
+                        <span class="user-avatar" aria-hidden="true">👤</span>
+                        <span id="user-label">User</span>
+                        <span class="chevron" aria-hidden="true">▾</span>
+                    </button>
+                    <div id="user-menu-list" class="menu-list" role="menu">
+                        <div class="menu-header" role="presentation">
+                            <div id="menu-user-name" class="menu-user-name">&nbsp;</div>
+                            <div id="menu-user-email" class="menu-user-email">&nbsp;</div>
+                        </div>
+                        <button id="menu-signout" class="menu-item" role="menuitem">Abmelden</button>
+                    </div>
+                </div>
                 <button id="theme-toggle" aria-label="Theme umschalten" title="Theme umschalten">🌓</button>
             </div>
         </nav>
@@ -75,6 +89,28 @@
     <!-- Toast-Nachrichten und Scroll-to-Top Button -->
     <div id="toast-container"></div>
     <button id="scrollToTopBtn" title="Nach oben" aria-label="Nach oben scrollen" tabindex="4">⬆️</button>
+    <!-- Datenschutz-Hinweis -->
+    <div id="privacy-banner" class="privacy-banner" role="region" aria-live="polite" hidden>
+        <p>Dieses Gästebuch verwendet Firebase (Google) für Anmeldung und Speicherung deiner Einträge. <button id="privacy-details" class="link-like" aria-haspopup="dialog">Details ansehen</button></p>
+        <button id="privacy-accept" class="auth-btn" aria-label="Hinweis verstanden">OK</button>
+    </div>
+    <div id="privacy-modal" class="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title" hidden>
+        <div class="privacy-modal__dialog">
+            <h2 id="privacy-title">Datenschutzhinweis</h2>
+            <div class="privacy-modal__content">
+                <p>Wir nutzen Firebase Authentication (Google) für die Anmeldung und Firestore zur Speicherung deiner Gästebucheinträge.</p>
+                <ul>
+                    <li>Bei Anmeldung verarbeiten wir deinen Anzeigenamen und ggf. deine E-Mail (vom Anbieter bereitgestellt).</li>
+                    <li>Gästebuch speichert: Name, Nachricht, Zeitstempel und eine anonymisierte Nutzer-ID (uid).</li>
+                    <li>Die Daten werden in Rechenzentren von Google verarbeitet. Es gelten die Datenschutzbestimmungen von Google.</li>
+                </ul>
+                <p>Mit „OK“ stimmst du dieser Verarbeitung zu. Du kannst dich jederzeit abmelden.</p>
+            </div>
+            <div class="privacy-modal__actions">
+                <button id="privacy-close" class="auth-btn" aria-label="Schließen">OK</button>
+            </div>
+        </div>
+    </div>
     <!-- Footer -->
     <footer>
         <div class="container"></div>
