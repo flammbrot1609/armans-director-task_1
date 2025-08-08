@@ -91,8 +91,8 @@
     <button id="scrollToTopBtn" title="Nach oben" aria-label="Nach oben scrollen" tabindex="4">⬆️</button>
     <!-- Datenschutz-Hinweis -->
     <div id="privacy-banner" class="privacy-banner" role="region" aria-live="polite" hidden>
-        <p>Dieses Gästebuch verwendet Firebase (Google) für Anmeldung und Speicherung deiner Einträge. <button id="privacy-details" class="link-like" aria-haspopup="dialog">Details ansehen</button></p>
-        <button id="privacy-accept" class="auth-btn" aria-label="Hinweis verstanden">OK</button>
+        <p>Dieses Gästebuch verwendet Firebase (Google) für Anmeldung und Speicherung deiner Einträge. <button id="privacy-details" class="link-like" aria-haspopup="dialog" type="button">Details ansehen</button></p>
+        <button id="privacy-accept" class="auth-btn" aria-label="Hinweis verstanden" type="button">OK</button>
     </div>
     <div id="privacy-modal" class="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title" hidden>
         <div class="privacy-modal__dialog">
@@ -107,7 +107,7 @@
                 <p>Mit „OK“ stimmst du dieser Verarbeitung zu. Du kannst dich jederzeit abmelden.</p>
             </div>
             <div class="privacy-modal__actions">
-                <button id="privacy-close" class="auth-btn" aria-label="Schließen">OK</button>
+                <button id="privacy-close" class="auth-btn" aria-label="Schließen" type="button">OK</button>
             </div>
         </div>
     </div>
