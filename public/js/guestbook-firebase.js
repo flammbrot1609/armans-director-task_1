@@ -119,7 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateAuthUI(user) {
         const isLoggedIn = !!user;
         const display = isLoggedIn ? (user.displayName || user.email || 'Angemeldet') : '';
-        if (userInfo) userInfo.textContent = display;
+        if (userInfo) {
+            if (isLoggedIn) {
+                userInfo.textContent = '';
+                userInfo.hidden = true;
+            } else {
+                userInfo.hidden = false;
+                userInfo.textContent = '';
+            }
+        }
         if (authBtn) {
             // Bei Login zeigen wir das User-Menü; der Anmeldebutton wird versteckt
             authBtn.textContent = isLoggedIn ? 'Abmelden' : 'Anmelden';
@@ -415,7 +423,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!privacyAccepted && privacyModal.dataset.bannerWasVisible === 'true' && privacyBanner) {
             privacyBanner.hidden = false;
         }
-        privacyDetails?.focus();
+        // Fokus zurück auf ein sichtbares Steuerelement setzen
+        if (!privacyAccepted && !privacyBanner?.hidden) {
+            privacyDetails?.focus();
+        } else if (userMenuToggle && !userMenu?.hidden) {
+            userMenuToggle.focus();
+        } else if (authBtn && !authBtn.hidden) {
+            authBtn.focus();
+        }
     }
     function acceptPrivacy() {
         try { localStorage.setItem('privacyAccepted', 'true'); } catch (_) {}
