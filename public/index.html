@@ -29,7 +29,11 @@
             <div class="logo">
                 <!-- Logo entfernt -->
             </div>
-            <button id="theme-toggle" aria-label="Theme umschalten" title="Theme umschalten">🌓</button>
+            <div class="nav-actions">
+                <span id="user-info" class="user-info" aria-live="polite"></span>
+                <button id="auth-btn" class="auth-btn" aria-label="Anmelden" title="Anmelden">Anmelden</button>
+                <button id="theme-toggle" aria-label="Theme umschalten" title="Theme umschalten">🌓</button>
+            </div>
         </nav>
     </header>
     <!-- Hauptinhalt -->
@@ -41,6 +45,10 @@
             <div class="section-box" id="product-development">
                 <h3>Gästebuch</h3>
                 <p>Host was uffm Herz? Schreib’s nei. Host nix? Dann hol dir’n Äppler und guck’s dir halt so an.</p>
+                <div id="auth-message" class="auth-message" role="region" aria-live="polite" hidden>
+                    <p>Bitte melde dich an, um einen Eintrag zu verfassen.</p>
+                    <button id="sign-in-inline" class="auth-btn" aria-label="Anmelden">Anmelden</button>
+                </div>
                 <form id="guestbook-form" autocomplete="off">
                     <div class="form-row">
                         <label class="sr-only" for="name">Name</label>

@@ -3,6 +3,7 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 /**
  * Initialisiert das Gästebuch nach DOM-Load
@@ -24,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    // Auth initialisieren
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
     // --- DOM-Elemente ---
     const form = document.getElementById('guestbook-form');
@@ -35,6 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageCounter = document.getElementById('message-counter');
     const nameErrorEl = document.getElementById('name-error');
     const messageErrorEl = document.getElementById('message-error');
+    const authBtn = document.getElementById('auth-btn');
+    const userInfo = document.getElementById('user-info');
+    const authMessage = document.getElementById('auth-message');
+    const signInInline = document.getElementById('sign-in-inline');
     // ARIA für Barrierefreiheit
     if (form) form.setAttribute('aria-label', 'Gästebuch-Formular');
     if (commentList) commentList.setAttribute('aria-live', 'polite');
@@ -50,6 +58,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Form-Utilities ---
     const NAME_MAX = 32;
     const MSG_MAX = 280;
+
+    function setFormEnabled(enabled) {
+        const controls = [nameInput, messageInput, submitBtn];
+        controls.forEach(el => { if (el) el.disabled = !enabled; });
+        if (!enabled) {
+            if (authMessage) authMessage.hidden = false;
+        }
+    }
+
+    function updateAuthUI(user) {
+        const isLoggedIn = !!user;
+        if (userInfo) userInfo.textContent = isLoggedIn ? (user.displayName || user.email || 'Angemeldet') : '';
+        if (authBtn) {
+            authBtn.textContent = isLoggedIn ? 'Abmelden' : 'Anmelden';
+            authBtn.setAttribute('aria-label', isLoggedIn ? 'Abmelden' : 'Anmelden');
+            authBtn.title = isLoggedIn ? 'Abmelden' : 'Anmelden';
+        }
+        if (authMessage) authMessage.hidden = isLoggedIn; // Hinweis nur anzeigen, wenn ausgeloggt
+        if (signInInline) signInInline.hidden = isLoggedIn;
+        setFormEnabled(isLoggedIn);
+    }
 
     function setCounter(el, current, max) {
         if (el) el.textContent = `${current}/${max}`;
@@ -127,10 +156,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const comment = docSnap.data();
             const li = document.createElement('li');
             li.className = 'comment';
+            const isOwner = auth?.currentUser && comment?.uid === auth.currentUser.uid;
+            const deleteBtnHtml = isOwner ? `<button class="delete-btn" title="Eintrag löschen" aria-label="Eintrag löschen">🗑️</button>` : '';
             li.innerHTML = `
                 <div class="comment-header">
                     <div class="comment-meta">${escapeHTML(comment.name)} | ${comment.timestamp?.toDate().toLocaleString() || ''}</div>
-                    <button class="delete-btn" title="Eintrag löschen" aria-label="Eintrag löschen">🗑️</button>
+                    ${deleteBtnHtml}
                 </div>
                 <div class="comment-message">${escapeHTML(comment.message)}</div>
             `;
@@ -160,6 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Formular-Submit: Kommentar speichern ---
     form?.addEventListener('submit', async function(e) {
         e.preventDefault();
+        if (!auth.currentUser) {
+            showToast('Bitte melde dich zuerst an.', 'error');
+            return;
+        }
         const name = nameInput?.value.trim();
         const message = messageInput?.value.trim();
         // Inline-Validierung
@@ -176,7 +211,8 @@ document.addEventListener('DOMContentLoaded', () => {
             await addDoc(collection(db, "comments"), {
                 name: escapeHTML(name),
                 message: escapeHTML(message),
-                timestamp: serverTimestamp()
+                timestamp: serverTimestamp(),
+                uid: auth.currentUser?.uid || null
             });
             form.reset();
             showToast('Danke für deinen Eintrag!', 'success');
@@ -211,6 +247,37 @@ document.addEventListener('DOMContentLoaded', () => {
             form.requestSubmit();
         }
     });
+
+    // --- Auth Events ---
+    authBtn?.addEventListener('click', async () => {
+        try {
+            if (auth.currentUser) {
+                await signOut(auth);
+                showToast('Abgemeldet.', 'success');
+            } else {
+                await signInWithPopup(auth, provider);
+                showToast('Erfolgreich angemeldet.', 'success');
+            }
+        } catch (e) {
+            logError('Auth', e);
+            showToast('Anmeldung fehlgeschlagen.', 'error');
+        }
+    });
+    signInInline?.addEventListener('click', async () => {
+        try {
+            await signInWithPopup(auth, provider);
+            showToast('Erfolgreich angemeldet.', 'success');
+        } catch (e) {
+            logError('AuthInline', e);
+            showToast('Anmeldung fehlgeschlagen.', 'error');
+        }
+    });
+    onAuthStateChanged(auth, (user) => {
+        updateAuthUI(user);
+    });
+
+    // Startzustand: bis Auth geklärt ist, deaktiviert
+    setFormEnabled(false);
 
     // --- Scroll-to-top Button ---
     const scrollBtn = document.getElementById('scrollToTopBtn');

@@ -180,6 +180,64 @@ nav {
     height: 72px;
 }
 
+.nav-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-info {
+    color: var(--color-comment-meta);
+    font-weight: 800;
+    font-size: 0.95rem;
+}
+
+/* Auth buttons (header + inline) */
+.auth-btn {
+    background: var(--color-btn-bg);
+    color: var(--color-btn-text);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 2px 8px var(--color-accent2);
+    transition: background 0.18s, box-shadow 0.18s, transform 0.13s, color 0.18s;
+}
+.auth-btn:hover {
+    background: var(--color-btn-hover-bg);
+    box-shadow: 0 4px 16px var(--color-accent);
+}
+.auth-btn:active { transform: scale(0.96); }
+.auth-btn:focus-visible {
+    outline: 2.5px solid #2BFD63;
+    outline-offset: 2px;
+}
+
+/* Inline auth message */
+.auth-message {
+    background: rgba(142,82,245,0.08);
+    border: 2px dashed var(--color-border);
+    border-radius: 12px;
+    padding: 12px;
+    margin: 0 0 14px 0;
+    text-align: center;
+}
+.auth-message p { margin: 0 0 10px 0; color: var(--color-text); }
+
+/* Disabled form look when logged out */
+.section-box input:disabled,
+.section-box textarea:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.guestbook-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    filter: grayscale(12%);
+}
+
 .logo-img {
     height: 54px;
     width: auto;
