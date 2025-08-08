@@ -3,7 +3,7 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 /**
  * Initialisiert das Gästebuch nach DOM-Load
@@ -12,6 +12,39 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Utility: Logging ---
     function logError(context, err) {
         console.error(`[Gästebuch][${context}]`, err);
+    }
+
+    function showAuthError(e) {
+        const code = e?.code || 'unknown';
+        // Freundliche, kontextsensitive Meldungen
+        const map = {
+            'auth/operation-not-allowed': 'Google-Login ist in Firebase nicht aktiviert.',
+            'auth/unauthorized-domain': 'Domain nicht in Firebase Authentication autorisiert.',
+            'auth/popup-blocked': 'Popup wurde vom Browser blockiert. Versuche es erneut oder erlaube Popups.',
+            'auth/popup-closed-by-user': 'Popup geschlossen. Bitte erneut versuchen.',
+            'auth/cancelled-popup-request': 'Popup abgebrochen. Bitte erneut versuchen.'
+        };
+        const msg = map[code] || 'Anmeldung fehlgeschlagen.';
+        showToast(msg, 'error');
+        logError('Auth', e);
+    }
+
+    async function signInFlow() {
+        try {
+            await signInWithPopup(auth, provider);
+            showToast('Erfolgreich angemeldet.', 'success');
+        } catch (e) {
+            if (e?.code === 'auth/popup-blocked') {
+                try {
+                    await signInWithRedirect(auth, provider);
+                    return; // Ergebnis wird nach Redirect verarbeitet
+                } catch (e2) {
+                    showAuthError(e2);
+                }
+            } else {
+                showAuthError(e);
+            }
+        }
     }
     // --- Firebase Konfiguration ---
     const firebaseConfig = {
@@ -28,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auth initialisieren
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
 
     // --- DOM-Elemente ---
     const form = document.getElementById('guestbook-form');
@@ -255,26 +289,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 await signOut(auth);
                 showToast('Abgemeldet.', 'success');
             } else {
-                await signInWithPopup(auth, provider);
-                showToast('Erfolgreich angemeldet.', 'success');
+                await signInFlow();
             }
         } catch (e) {
-            logError('Auth', e);
-            showToast('Anmeldung fehlgeschlagen.', 'error');
+            showAuthError(e);
         }
     });
     signInInline?.addEventListener('click', async () => {
         try {
-            await signInWithPopup(auth, provider);
-            showToast('Erfolgreich angemeldet.', 'success');
+            await signInFlow();
         } catch (e) {
-            logError('AuthInline', e);
-            showToast('Anmeldung fehlgeschlagen.', 'error');
+            showAuthError(e);
         }
     });
     onAuthStateChanged(auth, (user) => {
         updateAuthUI(user);
     });
+
+    // Redirect-Ergebnis verarbeiten (falls Popup blockiert war)
+    getRedirectResult(auth).then((result) => {
+        if (result?.user) {
+            showToast('Erfolgreich angemeldet.', 'success');
+        }
+    }).catch(showAuthError);
 
     // Startzustand: bis Auth geklärt ist, deaktiviert
     setFormEnabled(false);
