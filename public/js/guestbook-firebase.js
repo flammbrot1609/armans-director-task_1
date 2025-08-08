@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const privacyAccept = document.getElementById('privacy-accept');
     const privacyModal = document.getElementById('privacy-modal');
     const privacyClose = document.getElementById('privacy-close');
+    let privacyAccepted = false;
     // ARIA für Barrierefreiheit
     if (form) form.setAttribute('aria-label', 'Gästebuch-Formular');
     if (commentList) commentList.setAttribute('aria-live', 'polite');
@@ -388,11 +389,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function showPrivacyBannerIfNeeded() {
         try {
             const accepted = localStorage.getItem('privacyAccepted');
-            if (!accepted && privacyBanner) privacyBanner.hidden = false;
+            privacyAccepted = accepted === 'true';
+            if (!privacyAccepted && privacyBanner) privacyBanner.hidden = false;
         } catch (_) {}
     }
     function openPrivacyModal() {
         if (!privacyModal) return;
+        // Banner ausblenden, solange Modal offen ist
+        if (privacyBanner && !privacyBanner.hidden) {
+            privacyModal.dataset.bannerWasVisible = 'true';
+            privacyBanner.hidden = true;
+        } else {
+            privacyModal.dataset.bannerWasVisible = 'false';
+        }
         privacyModal.hidden = false;
         document.body.style.overflow = 'hidden';
         const focusEl = privacyModal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
@@ -402,14 +411,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!privacyModal) return;
         privacyModal.hidden = true;
         document.body.style.overflow = '';
+        // Banner wieder anzeigen, falls vorher sichtbar und noch nicht akzeptiert
+        if (!privacyAccepted && privacyModal.dataset.bannerWasVisible === 'true' && privacyBanner) {
+            privacyBanner.hidden = false;
+        }
         privacyDetails?.focus();
     }
-    privacyDetails?.addEventListener('click', (e) => { e.preventDefault(); openPrivacyModal(); });
-    privacyClose?.addEventListener('click', () => closePrivacyModal());
-    privacyAccept?.addEventListener('click', () => {
+    function acceptPrivacy() {
         try { localStorage.setItem('privacyAccepted', 'true'); } catch (_) {}
+        privacyAccepted = true;
         if (privacyBanner) privacyBanner.hidden = true;
-    });
+        closePrivacyModal();
+    }
+    privacyDetails?.addEventListener('click', (e) => { e.preventDefault(); openPrivacyModal(); });
+    privacyClose?.addEventListener('click', () => acceptPrivacy());
+    privacyAccept?.addEventListener('click', () => acceptPrivacy());
+    privacyModal?.addEventListener('click', (e) => { if (e.target === privacyModal) closePrivacyModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !privacyModal?.hidden) closePrivacyModal(); });
     showPrivacyBannerIfNeeded();
 
