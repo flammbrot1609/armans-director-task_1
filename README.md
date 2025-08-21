@@ -8,9 +8,12 @@ Eine moderne, minimalistische Gästebuch-Seite – inspiriert von thomann.io, mi
 ## Features
 
 - **Gästebuch:** Besucher können Einträge hinterlassen, die live angezeigt werden
+- **Anmeldung nur im Gästebuch:** Header-Login wurde entfernt; Sign-in ausschließlich im Gästebuch-Bereich
+- **Löschen/Bearbeiten:** Löschen für alle eingeloggten Nutzer; Bearbeiten nur durch den Owner
+- **Likes & Teilen:** Gefällt-mir-Reaktionen und Link-Kopieren für Einträge
+- **Dark/Light Mode:** Dark Mode standard, FOUC-frei via `public/js/theme-init.js`
 - **Firebase Firestore Backend:** Alle Einträge werden dauerhaft in Firestore gespeichert
-- **Neon Color Palette:** #000000 (schwarz), #FD01A6 (pink), #2BFD63 (giftgrün), #8E52F5 (lila)
-- **Minimalistisches Design:** Navigation ohne Logo/Links, Fokus auf Gästebuch
+- **CSP konfiguriert:** `public/_headers` erlaubt Firebase Auth IFrames (frame-src)
 - **Responsive:** Sieht auf Desktop und Mobile top aus
 - **Sichere Eingaben:** HTML-Escaping gegen XSS
 - **Netlify Deployment**: Einfaches Hosting & Continuous Deployment
@@ -20,11 +23,15 @@ Eine moderne, minimalistische Gästebuch-Seite – inspiriert von thomann.io, mi
 ```
 /public/
   index.html               # Hauptseite
+  privacy.html             # Datenschutzerklärung
+  impressum.html           # Impressum/Kontakt
+  _headers                 # Netlify Header (CSP für Firebase Auth)
   /css/
     styles.css             # Hauptstyles
   /js/
     guestbook-firebase.js  # Gästebuch + Firestore Integration
     theme-switcher.js      # Dark/Light-Mode
+    theme-init.js          # Setzt Theme sehr früh (FOUC vermeiden)
   /assets/
     logo.png               # Logo (optional)
 README.md                  # Diese Datei
@@ -51,8 +58,25 @@ netlify.toml               # Netlify Deployment Config
 
 ## Firestore Hinweise
 - Kommentare werden in der Collection `comments` gespeichert
-- Prüfe Firestore-Regeln, falls keine Kommentare angezeigt werden
-- Kommentare bleiben erhalten, solange die Datenbank nicht manuell geleert wird
+- Prüfe Firestore-Regeln, wenn Aktionen fehlschlagen (z. B. Löschen, Like)
+- Beispiel-Regeln passend zur aktuellen App (Löschen für alle Auth-User, Edit nur Owner, Like-Ausnahmen):
+
+```rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow delete: if request.auth != null; // jeder eingeloggte User darf löschen
+      allow update: if request.auth != null && (
+        request.auth.uid == resource.data.uid ||
+        request.resource.data.diff(resource.data).changedKeys().hasOnly(["likedBy"]) // Likes erlauben
+      );
+    }
+  }
+}
+```
 
 ## Troubleshooting
 - **Kommentare fehlen:** Prüfe Firestore-Konfiguration und Collection-Namen
