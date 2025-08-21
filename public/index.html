@@ -16,13 +16,23 @@
     <meta name="twitter:title" content="Arman's Director Task Gästebuch">
     <meta name="twitter:description" content="Modernes Gästebuch – Lass einen Gruß, ein Lob oder nette Worte da!">
     <meta name="twitter:image" content="https://arman-director-task.netlify.app/assets/logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@900&display=swap" rel="stylesheet">
+    <!-- Performance hints -->
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://securetoken.googleapis.com" crossorigin>
+    <link rel="dns-prefetch" href="//www.gstatic.com">
+    <link rel="dns-prefetch" href="//firestore.googleapis.com">
+    <!-- Module preload for Firebase v9 modules used -->
+    <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js" crossorigin>
+    <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" crossorigin>
+    <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js" crossorigin>
+    <!-- Early theme application to avoid FOUC (CSP-safe external script) -->
+    <script src="js/theme-init.js"></script>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 </head>
-<body class="dark-theme">
+<body>
     <!-- Hauptnavigation und Logo -->
     <header>
         <nav>
@@ -30,22 +40,6 @@
                 <!-- Logo entfernt -->
             </div>
             <div class="nav-actions">
-                <span id="user-info" class="user-info" aria-live="polite"></span>
-                <button id="auth-btn" class="auth-btn" aria-label="Anmelden" title="Anmelden">Anmelden</button>
-                <div id="user-menu" class="user-menu" hidden>
-                    <button id="user-menu-toggle" class="user-chip" aria-haspopup="menu" aria-expanded="false" aria-controls="user-menu-list">
-                        <span class="user-avatar" aria-hidden="true">👤</span>
-                        <span id="user-label">User</span>
-                        <span class="chevron" aria-hidden="true">▾</span>
-                    </button>
-                    <div id="user-menu-list" class="menu-list" role="menu">
-                        <div class="menu-header" role="presentation">
-                            <div id="menu-user-name" class="menu-user-name">&nbsp;</div>
-                            <div id="menu-user-email" class="menu-user-email">&nbsp;</div>
-                        </div>
-                        <button id="menu-signout" class="menu-item" role="menuitem">Abmelden</button>
-                    </div>
-                </div>
                 <button id="theme-toggle" aria-label="Theme umschalten" title="Theme umschalten">🌓</button>
             </div>
         </nav>
@@ -53,12 +47,11 @@
     <!-- Hauptinhalt -->
     <main>
         <section class="hero">
-            <h1>Moin und Willkommen! Lass einen Eintrag da!</h1>
+            <h1>Host was uffm Herz? Schreib’s nei. Host nix? Dann hol dir’n Äppler und guck’s dir halt so an.</h1>
         </section>
         <section class="sections">
             <div class="section-box" id="product-development">
                 <h3>Gästebuch</h3>
-                <p>Host was uffm Herz? Schreib’s nei. Host nix? Dann hol dir’n Äppler und guck’s dir halt so an.</p>
                 <div id="auth-message" class="auth-message" role="region" aria-live="polite" hidden>
                     <p>Bitte melde dich an, um einen Eintrag zu verfassen.</p>
                     <button id="sign-in-inline" class="auth-btn" aria-label="Anmelden">Anmelden</button>
@@ -82,13 +75,17 @@
                     </div>
                     <button type="submit" class="guestbook-btn" aria-label="Eintrag absenden" tabindex="3">Eintragen</button>
                 </form>
+                <div class="search-row">
+                    <label class="sr-only" for="search-input">Suchen</label>
+                    <input type="search" id="search-input" placeholder="Suchen nach Name oder Text …" aria-label="Einträge durchsuchen" />
+                </div>
                 <ul id="comment-list"></ul>
             </div>
         </section>
     </main>
     <!-- Toast-Nachrichten und Scroll-to-Top Button -->
     <div id="toast-container"></div>
-    <button id="scrollToTopBtn" title="Nach oben" aria-label="Nach oben scrollen" tabindex="4">⬆️</button>
+    <button id="scrollToTopBtn" class="is-hidden" title="Nach oben" aria-label="Nach oben scrollen" tabindex="4">⬆️</button>
     <!-- Datenschutz-Hinweis -->
     <div id="privacy-banner" class="privacy-banner" role="region" aria-live="polite" hidden>
         <p>Dieses Gästebuch verwendet Firebase (Google) für Anmeldung und Speicherung deiner Einträge. <button id="privacy-details" class="link-like" aria-haspopup="dialog" type="button">Details ansehen</button></p>
@@ -104,16 +101,23 @@
                     <li>Gästebuch speichert: Name, Nachricht, Zeitstempel und eine anonymisierte Nutzer-ID (uid).</li>
                     <li>Die Daten werden in Rechenzentren von Google verarbeitet. Es gelten die Datenschutzbestimmungen von Google.</li>
                 </ul>
-                <p>Mit „OK“ stimmst du dieser Verarbeitung zu. Du kannst dich jederzeit abmelden.</p>
+                <p>Mit „Zustimmen“ stimmst du dieser Verarbeitung zu. Du kannst dich jederzeit abmelden und deine Einwilligung über die Datenschutzeinstellungen widerrufen.</p>
             </div>
             <div class="privacy-modal__actions">
-                <button id="privacy-close" class="auth-btn" aria-label="Schließen" type="button">OK</button>
+                <button id="privacy-close" class="auth-btn" aria-label="Schließen" type="button">Schließen</button>
+                <button id="privacy-agree" class="auth-btn" aria-label="Zustimmen" type="button">Zustimmen</button>
             </div>
         </div>
     </div>
     <!-- Footer -->
     <footer>
-        <div class="container"></div>
+        <div class="container">
+            <nav class="footer-nav" aria-label="Footer">
+                <a href="/privacy.html">Datenschutzerklärung</a>
+                <a href="/impressum.html">Impressum</a>
+                <button id="privacy-settings" class="link-like" type="button">Datenschutzeinstellungen</button>
+            </nav>
+        </div>
     </footer>
     <!-- Haupt-JS -->
     <script src="js/theme-switcher.js" defer></script>
