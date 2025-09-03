@@ -16,7 +16,7 @@ Eine moderne, minimalistische Gästebuch-Seite – inspiriert von thomann.io, mi
 - **CSP konfiguriert:** `public/_headers` erlaubt Firebase Auth IFrames (frame-src)
 - **Responsive:** Sieht auf Desktop und Mobile top aus
 - **Sichere Eingaben:** HTML-Escaping gegen XSS
-- **Netlify Deployment**: Einfaches Hosting & Continuous Deployment
+- **Netlify Deployment**: Automatische Deployments auf https://arman-director-task.netlify.app
 
 ## Projektstruktur
 
@@ -52,10 +52,6 @@ netlify.toml               # Netlify Deployment Config
    - Die Konfiguration findest du in `/public/js/guestbook-firebase.js`
    - Erstelle eine Collection `comments` mit Feldern: `name`, `message`, `timestamp`
 
-3. **Deployment (Netlify):**
-   - Das Projekt ist bereits mit Netlify verbunden
-   - Für eigene Deployments: `netlify deploy --prod`
-
 ## Firestore Hinweise
 - Kommentare werden in der Collection `comments` gespeichert
 - Prüfe Firestore-Regeln, wenn Aktionen fehlschlagen (z. B. Löschen, Like)
@@ -83,23 +79,6 @@ service cloud.firestore {
 - **Deployment-Fehler:** Stelle sicher, dass Netlify CLI installiert und das Projekt verlinkt ist
 - **Fragen?** Issues im [GitHub Repo](https://github.com/flammbrot1609/armans-director-task_1/issues) eröffnen
 
----
-
-© Arman Savuk, 2025
-
-   - Firestore aktivieren (Start in Test Mode)
-   - Collection `comments` anlegen (Felder: name, message, timestamp)
-   - Konfigurationsdaten in `/js/guestbook-firebase.js` eintragen (bereits erledigt)
-3. **Lokal testen:**
-   ```bash
-   python3 -m http.server 8000
-   # oder
-   npx live-server
-   ```
-4. **Deployment:**
-   - Bereits für Netlify vorbereitet, einfach deployen
-   - Live unter: https://arman-director-task.netlify.app
-
 ## Gästebuch Backend (Firebase)
 - **Speichert alle Einträge in Firestore**
 - Echtzeit-Updates durch onSnapshot
@@ -120,23 +99,6 @@ service cloud.firestore {
 
 **Viel Spaß mit deinem Gästebuch!**
 
-Currently using Arial font family. You can easily change this in the CSS:
-```css
-body {
-    font-family: 'Your Font', sans-serif;
-}
-```
-
-### Sections
-Add new sections by following the existing pattern:
-```html
-<section id="your-section" class="section">
-    <div class="container">
-        <!-- Your content here -->
-    </div>
-</section>
-```
-
 ## Browser Support
 
 - Chrome (latest)
@@ -146,7 +108,7 @@ Add new sections by following the existing pattern:
 
 ## License
 
-This template is free to use for personal and commercial projects.
+MIT License. Siehe `package.json`.
 
 ## Contributing
 
